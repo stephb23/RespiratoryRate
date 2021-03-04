@@ -1,4 +1,4 @@
-# RespiratoryRate
+# Respiratory Rate
 Files for the paper "Determining respiratory rate from photoplethysmogram and electrocardiogram signals using respiratory quality indices and neural networks"
 
 ## Model code
