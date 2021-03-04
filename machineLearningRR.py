@@ -1,19 +1,15 @@
 import numpy as np
 import keras
-import matplotlib.pyplot as pl
 from keras.models import Sequential
-from keras.layers import Dense, LSTM, Bidirectional, Conv1D, MaxPooling1D, Flatten, Activation, GlobalMaxPooling1D, GlobalAveragePooling1D, SimpleRNN
+from keras.layers import Dense, LSTM, Bidirectional
 from keras.models import load_model
 from keras.callbacks import EarlyStopping, ModelCheckpoint
 from sklearn.metrics import r2_score, accuracy_score, mean_squared_error, mean_absolute_error
 from sklearn.model_selection import train_test_split
 from keras.callbacks import History
-from eli5.permutation_importance import get_score_importances
 
 from keras.wrappers.scikit_learn import KerasRegressor
 history = History()
-
-from keras.utils import plot_model
 
 from tensorflow.python.client import device_lib
 
@@ -28,15 +24,6 @@ numEpochs = 5000
 
 seed = 5
 
-# UniLSTM Model structure
-# model = Sequential()
-# model.add(LSTM(numHiddenUnits, return_sequences=True, input_shape=(numFeatures, 1)))
-# model.add(LSTM(numHiddenUnits, return_sequences=True))
-# model.add(LSTM(numHiddenUnits, return_sequences=False))
-# model.add(Dense(1, activation='sigmoid'))
-# model.compile(loss='mae', optimizer='adam', metrics=['mae', 'accuracy'])
-
-
 # BiLSTM Model structure
 model = Sequential()
 model.add(Bidirectional(LSTM(numHiddenUnits, return_sequences=True), input_shape=(numFeatures,1)))
@@ -44,31 +31,6 @@ model.add(Bidirectional(LSTM(numHiddenUnits, return_sequences=True)))
 model.add(Bidirectional(LSTM(numHiddenUnits, return_sequences=False)))
 model.add(Dense(1, activation='sigmoid'))
 model.compile(loss='mae', optimizer='adam', metrics=['mae', 'accuracy'])
-
-# # # CNN Model structure
-# model = Sequential()
-# model.add(Conv1D(numHiddenUnits, kernel_size=2, activation='relu', input_shape=(numFeatures, 1)))
-# model.add(Conv1D(numHiddenUnits, kernel_size=2, activation='relu'))
-# model.add(MaxPooling1D(2))
-# model.add(Flatten())
-# model.add(Dense(1, activation='sigmoid'))
-# model.compile(loss='mae', optimizer='adam', metrics=['mae', 'accuracy'])
-
-# # Dense Model structure
-# model = Sequential()
-# model.add(Dense(numHiddenUnits, activation='relu', input_shape=(numFeatures, 1)))
-# model.add(Dense(numHiddenUnits, activation='relu'))
-# model.add(Flatten())
-# model.add(Dense(1, activation='sigmoid'))
-# model.compile(loss='mean_absolute_error', optimizer='adam', metrics=['mae', 'accuracy'])
-
-# SimpleRNN Model structure
-# model = Sequential()
-# model.add(SimpleRNN(numHiddenUnits, return_sequences=True, input_shape=(numFeatures, 1)))
-# model.add(SimpleRNN(numHiddenUnits, return_sequences=True))
-# model.add(SimpleRNN(numHiddenUnits, return_sequences=False))
-# model.add(Dense(1, activation='sigmoid'))
-# model.compile(loss='mae', optimizer='adam', metrics=['mae', 'accuracy'])
 
 
 modelName = "albusRRPeriodicBiLSTM60s-RROnly.h5"
@@ -121,23 +83,13 @@ for y in range(0, len(outputFileLines)):
 
     countY += 1
 
-# Get labels into an array
-# print(outputFileLines)
 # Normalize Y's
 Y = (Y - minRR)/(maxRR - minRR)
 
-# expected input data shape: (batch_size, timesteps, data_dim)
 X_train, X_test, Y_train, y_test = train_test_split(X, Y, test_size=0.1, random_state=7, shuffle=True)
-# trainSize = int(np.round(len(X) * 0.9))
-# X_train = X[0:trainSize]
-# X_test = X[trainSize:-1]
-# y_train = Y[0:trainSize]
-# y_test = Y[trainSize:-1]
-print(X_train)
 
 X_train = X_train.reshape(len(X_train), numFeatures, 1)
 X_test = X_test.reshape(len(X_test), numFeatures, 1)
-print(X_train[:][1, :])
 
 modelCheckpoint = ModelCheckpoint(filepath=weightsFileName, save_best_only=True, save_weights_only=False, monitor='val_loss')
 
@@ -194,16 +146,3 @@ mae = mean_absolute_error(y_true, y_pred)
 #print("Accuracy = " + str(accuracy))
 print("Root Mean Square Error = " + str(rmse))
 print("Mean Average Error = " + str(mae))
-
-
-def score(X, y):
-    sumError = 0
-    pred = model.predict(X)
-    return mean_absolute_error(y, pred)
-
-
-base_score, score_decreases = get_score_importances(score, X_train, Y_train)
-featureImportances = np.mean(score_decreases, axis=0)
-print(featureImportances)
-print(base_score)
-print(score_decreases)
