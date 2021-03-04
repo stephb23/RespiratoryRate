@@ -1,5 +1,5 @@
 # Respiratory Rate
-Files for the paper "Determining respiratory rate from photoplethysmogram and electrocardiogram signals using respiratory quality indices and neural networks"
+Files for the paper "Determining respiratory rate from photoplethysmogram and electrocardiogram signals using respiratory quality indices and neural networks" by Baker, et al.
 
 ## Model code
 * machineLearningRR.py - contains the deep learning code, which has several package dependencies including Keras and Tensorflow-GPU.
