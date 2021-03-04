@@ -29,23 +29,6 @@ function generateGraphsRR()
     title('Error Histogram (20-second PPG & ECG segments)')
     grid on;
     grid minor;
-%     xtips1 = uniqueErrors;
-%     ytips1 = occurancesOfUniqueError;
-%     labels1 = string(occurancesOfUniqueError);
-%     text(xtips1,ytips1,labels1,'HorizontalAlignment','center',...
-%     'VerticalAlignment','bottom', 'FontSize', 12)
-    
-%     figure(3);
-%     bar(uniqueExpectedValues, occurancesOfExpectedValue)
-%     title('Distribution of True RRs in the Test Database', 'FontSize', 40);
-%     xlabel('True SBP (mmHg)', 'FontSize', 30, 'FontWeight', 'bold');
-%     ylabel('Frequency', 'FontSize', 30, 'FontWeight', 'bold');
-%     %xlim([87 133])
-%     %ylim([0 850])
-%     xtick = (get(gca, 'XTickLabel'));
-%     set(gca,'XTickLabel',xtick,'FontName','Times','fontsize',28)
-%     grid on;
-%     grid minor;
     
     figure();
     bar(uniqueExpectedValues, occurancesOfExpectedValue, 'DisplayName', 'Total Records')
@@ -55,8 +38,6 @@ function generateGraphsRR()
     title('Accurate Predictions by True RR', 'FontSize', 40);
     xlabel('True RR (BrPM)', 'FontSize', 30, 'FontWeight', 'bold');
     ylabel('Frequency', 'FontSize', 30, 'FontWeight', 'bold');
-    %xlim([87 133])
-    %ylim([0 850])
     xtick = (get(gca, 'XTickLabel'));
     set(gca,'XTickLabel',xtick,'FontName','Times','fontsize',28)
     grid on;
